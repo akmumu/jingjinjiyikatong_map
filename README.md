@@ -21,4 +21,5 @@ http://www.akmumu.com/map.html
 # 未得到主人的TODO
 - 增加景区等级（5A等）
 - 景区日期
+- 是否需要预约的显示
 - 待添加
