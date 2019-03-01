@@ -2,9 +2,9 @@
 京津冀旅游一卡通地图导览
 
 # 预览图
-
+![](https://raw.githubusercontent.com/akmumu/jingjinjiyikatong_map/master/demo.png)
 # demo示例
-
+http://www.akmumu.com/map.html
 # 如何使用
 直接配置config中的内容即可
 ```
