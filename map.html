@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+    <style type="text/css">
+        body, html, #allmap {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            margin: 0;
+            font-family: "微软雅黑";
+        }
+
+        #l-map {
+            height: 100%;
+            width: 78%;
+            float: left;
+            border-right: 2px solid #bcbcbc;
+        }
+
+        #r-result {
+            height: 100%;
+            width: 20%;
+            float: left;
+        }
+    </style>
+    <script type="text/javascript"
+            src="http://api.map.baidu.com/api?v=2.0&ak=ZvMPkmKHbRkgnL2R1ZaO208Se8FX1HiP"></script>
+    <title>京津冀旅游卡地图导览</title>
+</head>
+<body>
+<div id="allmap"></div>
+</body>
+</html>
+<script type="text/javascript">
+    //配置
+    var config = {
+        "center": {"j": "116.276079", "w": "40.16096"},
+        "attractions": [
+            {"label":"明十三陵总神道","j":"116.232006","w":"40.263881"},
+            {"label":"古长城","j":"115.984126","w":"40.344634"}
+        ]
+    };
+    // 百度地图API功能
+    var map = new BMap.Map("allmap");
+    var point = new BMap.Point(config.center.j, config.center.w);
+    map.centerAndZoom(point, 11);
+    map.addControl(new BMap.MapTypeControl({
+        mapTypes: [
+            BMAP_NORMAL_MAP,
+            BMAP_HYBRID_MAP
+        ]
+    }));
+    map.setCurrentCity("北京");          // 设置地图显示的城市 此项是必须设置的
+    map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+    // 编写自定义函数,创建标注
+    function addMarker(point, lable) {
+        var marker = new BMap.Marker(point);
+        map.addOverlay(marker);
+        if (lable) {
+            var label = new BMap.Label(lable, {offset: new BMap.Size(20, -10)});
+            marker.setLabel(label);
+        }
+
+    }
+
+    attractions = config.attractions;
+    for (var k in attractions) {
+        var point = new BMap.Point(attractions[k].j, attractions[k].w);
+        addMarker(point, attractions[k].label);
+    }
+
+</script>
+
