@@ -39,18 +39,25 @@
         "center": {"j": "116.276079", "w": "40.16096"},
         "attractions": [
             //海淀
-            {"label":"鹫峰(3A)","j":"116.111358","w":"40.071585"},
-            {"label":"阳台山(2A)","j":"116.112194","w":"40.07365"},
-            {"label":"中国京西皮影非遗园","j":"116.224348","w":"40.143285"},
-            {"label":"大钟寺古钟博物馆(3A)","j":"116.344546","w":"39.973724"},
+            {"label":"鹫峰(3A)-4日闭园","location":"116.111358,40.071585","status":"attention"},
+            {"label":"阳台山(2A)","location":"116.112194,40.07365"},
+            {"label":"中国京西皮影非遗园","location":"116.224348,40.143285"},
+            {"label":"大钟寺古钟博物馆(3A)","location":"116.344546,39.973724"},
             //延庆
-            {"label":"古长城","j":"115.984126","w":"40.344634"},
-            {"label":"梦幻长城球幕影院(5A)","j":"116.015981","w":"40.363695"},
+            {"label":"古长城","location":"115.984126,40.344634"},
+            {"label":"梦幻长城球幕影院(5A)","location":"116.015981,40.363695"},
+            {"label":"古崖居风景名胜区(3A)","location":"115.781963,40.469104"},
+            {"label":"长城铁花(A)","location":"115.993567,40.429756","status":"done"},
             //昌平
-            {"label":"燕子湖风景区","j":"116.213614","w":"40.297034"},
-            {"label":"明十三陵总神道","j":"116.232006","w":"40.263881"},
-            {"label":"居庸关长城(4A)","j":"116.082341","w":"40.293508"},
-            {"label":"北京后花园","j":"116.104689","w":"40.133128"}
+            {"label":"燕子湖风景区","location":"116.213614,40.297034"},
+            {"label":"明十三陵总神道(5A)","location":"116.232006,40.263881","status":"done"},
+            {"label":"居庸关长城(4A)","location":"116.082341,40.293508"},
+            {"label":"北京后花园","location":"116.104689,40.133128"},
+            {"label":"静之湖森林公园(3A)","location":"116.450002,40.252247"},
+            //密云
+            {"label":"古北口镇(3A)","location":"117.170492,40.697861"},
+            //顺义
+            {"label":"北京河北村民俗(3A)","location":"116.735256,40.137355"}
         ]
     };
     // 百度地图API功能
@@ -66,11 +73,35 @@
     map.setCurrentCity("北京");          // 设置地图显示的城市 此项是必须设置的
     map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
     // 编写自定义函数,创建标注
-    function addMarker(point, lable) {
-        var marker = new BMap.Marker(point);
+    function addMarker(point, attraction) {
+        var iconColor = '';
+        if (attraction.status === "attention") {
+            iconColor = 'blue';
+        }
+        if (attraction.status === "done") {
+            iconColor = 'green';
+        }
+        if (iconColor === '') {
+            var marker = new BMap.Marker(point);
+        } else {
+            var myIcon = new BMap.Icon("/img/map/"+iconColor+".png", new BMap.Size(23, 27), {
+                // 指定定位位置。
+                // 当标注显示在地图上时，其所指向的地理位置距离图标左上
+                // 角各偏移10像素和25像素。您可以看到在本例中该位置即是
+                // 图标中央下端的尖角位置。
+                anchor: new BMap.Size(10, 25),
+                // 设置图片偏移。
+                // 当您需要从一幅较大的图片中截取某部分作为标注图标时，您
+                // 需要指定大图的偏移位置，此做法与css sprites技术类似。
+                // imageOffset: new BMap.Size(0, 0 - index * 25)   // 设置图片偏移
+            });
+            var marker = new BMap.Marker(point, {icon: myIcon});
+        }
+
         map.addOverlay(marker);
-        if (lable) {
-            var label = new BMap.Label(lable, {offset: new BMap.Size(20, -10)});
+        var myLabel = attraction.label;
+        if (myLabel) {
+            var label = new BMap.Label(myLabel, {offset: new BMap.Size(20, -10)});
             marker.setLabel(label);
         }
 
@@ -78,8 +109,8 @@
 
     attractions = config.attractions;
     for (var k in attractions) {
-        var point = new BMap.Point(attractions[k].j, attractions[k].w);
-        addMarker(point, attractions[k].label);
+        var point = new BMap.Point(attractions[k].location.split(",")[0], attractions[k].location.split(",")[1]);
+        addMarker(point, attractions[k]);
     }
 
 </script>
